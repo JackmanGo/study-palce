@@ -98,7 +98,7 @@ public class FormDataService {
         Path filePath = uploadPath.resolve(uniqueFileName);
         imageFile.transferTo(filePath.toFile());
 
-        return uploadDir + uniqueFileName;
+        return uniqueFileName;
     }
 
     // 获取客户端IP（保持不变）

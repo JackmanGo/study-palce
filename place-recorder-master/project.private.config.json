@@ -1,26 +1,7 @@
 {
   "libVersion": "3.9.1",
   "projectname": "%E6%89%93%E4%B8%AA%E5%8D%A1%E5%91%97",
-  "condition": {
-    "miniprogram": {
-      "list": [
-        {
-          "name": "相机",
-          "pathName": "pages/camera/camera",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "照片",
-          "pathName": "pages/picture/picture",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        }
-      ]
-    }
-  },
+  "condition": {},
   "setting": {
     "urlCheck": false,
     "coverView": true,

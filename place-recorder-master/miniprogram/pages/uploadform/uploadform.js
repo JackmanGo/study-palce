@@ -158,7 +158,7 @@ setCameraImage: function(imagePath) {
     const imagePath = this.data.images[index];
     
     wx.uploadFile({
-      url: 'https://192.168.232.131:8081/place/main/submit', //服务器上传地址
+      url: 'http://127.0.0.1:8081/place/main/submit', //服务器上传地址
       filePath: imagePath,
       name: 'image',
       formData: {
