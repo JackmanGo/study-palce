@@ -1,0 +1,54 @@
+<!--index.wxml-->
+
+<import src="/pages/common/footer.wxml" />
+
+<view class="container" wx:if="{{ !hasLocation }}">
+  <view class="userinfo">
+    <image wx:if="{{!hasUserInfo && canIUse}}" class="userinfo-avatar" mode="cover" src='/images/logo.png'></image>
+    <image wx:if="{{ hasUserInfo }}" bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+    <text wx:if="{{ hasUserInfo }}" class="userinfo-nickname">{{userInfo.nickName}}</text>
+    <text wx:if="{{ hasUserInfo }}" class="userinfo-nickname">\n</text>
+  </view>
+
+  <view class="usermotto" style='margin: 15px 0; '>
+    <text class="user-motto">{{ motto }}</text>
+    <button class='weui-btn' type='primary' wx:if="{{ !hasUserInfo && canIUse }}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 微信登录 </button>
+    <button class='weui-btn' type='primary' wx:if="{{ hasUserInfo }}" bindtap='getAddress' style="margin:10px auto;">获取当前位置</button>
+  </view>
+
+  <template is="footer" data="{{text: 'forbar'}}" />
+</view>
+
+<view class='page' wx:if="{{ hasLocation }}">
+  <view class="page__bd page__bd_spacing">
+    <map longitude="{{ location_details.location.lng }}" latitude="{{ location_details.location.lat }}" subkey="3FOBZ-ZWAC4-5WHUK-XF4HT-PGGKV-TBB3Q" show-location></map>
+    
+    <view class="weui-form-preview__bd">
+      <view class="weui-form-preview__item">
+        <view class="weui-form-preview__label">经度</view>
+        <view class="weui-form-preview__value">{{ location_details.location.lng }}</view>
+      </view>
+      <view class="weui-form-preview__item">
+        <view class="weui-form-preview__label">纬度</view>
+        <view class="weui-form-preview__value">{{ location_details.location.lat }}</view>
+      </view>
+      <view class="weui-form-preview__item">
+        <view class="weui-form-preview__label">地址</view>
+        <view class="weui-form-preview__value">{{ location_details.address }}</view>
+      </view>
+      <view class="weui-form-preview__item">
+        <view class="weui-form-preview__label"></view>
+        <view class="weui-form-preview__value">{{ location_details.formatted_addresses.recommend }}</view>
+      </view>
+    </view>
+
+    <!--view class="weui-cells__title">定位不准确？试试手动选择你的位置吧!</view>
+    <button class='weui-btn' type='default' bindtap='chooseLocation'>打开地图选择位置</button-->
+    <button class='weui-btn' type='default' bindtap='getAddress'>重新获取当前位置</button>
+    <button class='weui-btn' type='primary' bindtap='goUploadform' style='margin-bottom: 25px'>打卡</button>
+
+    <template is="footer" data="{{text: 'foobar'}}" />
+
+  </view>
+</view>
+

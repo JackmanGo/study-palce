@@ -1,0 +1,5 @@
+<template name="footer">
+  <view class="weui-footer">
+    <view class="weui-footer__text"></view>
+  </view>
+</template>

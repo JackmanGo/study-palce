@@ -1,0 +1,23 @@
+<!--miniprogram/pages/about/about.wxml-->
+
+<import src="/pages/common/footer.wxml" />
+
+<view class="page">
+  <view class="page__hd">
+    <view class="page__title">关于“打个卡”</view>
+    <view class="page__desc">隐私协议、服务协议</view>
+  </view>
+
+      <view class="weui-article__section">
+        <view class="weui-article__title"> 开发信息</view>
+        <view class="weui-article__p">
+          版本号：v1.0.0
+        </view>
+        <view class="weui-article__p">
+          更新时间：2025.8.7
+        </view>
+        <!-- 公众号关注组件 -->
+        <!--official-account></official-account-->
+      </view>
+    <!--template is="footer" data="{{text: 'forbar'}}" /-->
+</view>

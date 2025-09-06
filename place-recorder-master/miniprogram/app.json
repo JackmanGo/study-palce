@@ -1,0 +1,53 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/footprints/footprints",
+    "pages/logs/logs",
+    "pages/about/about",
+    "pages/index/success/success",
+    "pages/camera/camera",
+    "pages/uploadform/uploadform"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "navigationStyle": "custom",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "打个卡呗",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "打卡",
+        "iconPath": "images/tabBar/location.png",
+        "selectedIconPath": "images/tabBar/location-selected.png"
+      },
+      {
+        "pagePath": "pages/footprints/footprints",
+        "text": "我的打卡记录",
+        "iconPath": "images/tabBar/footprint.png",
+        "selectedIconPath": "images/tabBar/footprint-selected.png"
+      },
+      {
+        "pagePath": "pages/about/about",
+        "text": "关于",
+        "iconPath": "images/tabBar/user.png",
+        "selectedIconPath": "images/tabBar/user-selected.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于位置打卡服务"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "sitemapLocation": "sitemap.json",
+  "useExtendedLib": {
+    "weui": true
+  }
+}

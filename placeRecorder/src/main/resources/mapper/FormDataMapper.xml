@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="place.dao.FormDataMapper">
+    <!-- 结果映射 -->
+    <resultMap id="FormDataResultMap" type="place.param.FormData">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="description" column="description" />
+        <result property="imagePath" column="image_path" />
+        <result property="createTime" column="create_time" />
+        <result property="ipAddress" column="ip_address" />
+        <result property="userAgent" column="user_agent" />
+    </resultMap>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="place.param.FormData" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO form_data (
+            title,
+            description,
+            image_path,
+            create_time,
+            ip_address,
+            user_agent
+        ) VALUES (
+                     #{title},
+                     #{description},
+                     #{imagePath},
+                     #{createTime},
+                     #{ipAddress},
+                     #{userAgent}
+                 )
+    </insert>
+
+</mapper>

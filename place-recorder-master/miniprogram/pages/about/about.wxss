@@ -1,0 +1,11 @@
+page {
+  background-color: #fff;
+}
+
+image {
+  margin: 4px 0;
+}
+
+.weui-article__title {
+  margin: 0 0 0.8em;
+}

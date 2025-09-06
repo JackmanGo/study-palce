@@ -1,0 +1,75 @@
+<!-- 页面结构 -->
+<view class="container">
+  <!-- 标题 -->
+  <view class="header">
+    <text>信息上传表单</text>
+  </view>
+  
+  <!-- 表单区域 -->
+  <form bindsubmit="formSubmit">
+    <!-- 文本输入区域 -->
+    <view class="form-group">
+      <text class="label">位置</text>
+      <input 
+        class="input" 
+        name="title" 
+        placeholder="请输入位置" 
+        value="{{title}}"
+        bindinput="onTitleInput"
+      />
+    </view>
+    
+    <view class="form-group">
+      <text class="label">详细描述</text>
+      <textarea 
+        class="textarea" 
+        name="description" 
+        placeholder="请输入描述" 
+        value="{{description}}"
+        bindinput="onDescriptionInput"
+        maxlength="200"
+      />
+      <text class="word-count">{{description.length}}/200</text>
+    </view>
+    
+    <!-- 图片上传区域 -->
+    <view class="form-group">
+      <text class="label">上传图片</text>
+      <view class="uploader">
+        <view class="uploader-header">
+          <text class="uploader-title">图片(最多1张)</text>
+        </view>
+        <view class="uploader-body">
+          <view class="uploader__files">
+            <block wx:for="{{images}}" wx:key="*this">
+              <view class="uploader__file">
+                <image class="uploader__img" src="{{item}}" mode="aspectFill" />
+                <view class="uploader__delete" bindtap="deleteImage" data-index="{{index}}">
+                  <text class="icon">×</text>
+                </view>
+              </view>
+            </block>
+            <view wx:if="{{images.length < 1}}" class="uploader__input-box" bindtap="chooseImage">
+              <view class="uploader__input">
+                <text class="icon">+</text>
+                <text class="uploader__text">选择图片</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 提交按钮 -->
+    <view class="btn-area">
+      <button 
+        class="submit-btn" 
+        form-type="submit" 
+        type="primary" 
+        loading="{{isSubmitting}}"
+      >
+        {{isSubmitting ? '提交中...' : '提交信息'}}
+      </button>
+    </view>
+  </form>
+</view>
