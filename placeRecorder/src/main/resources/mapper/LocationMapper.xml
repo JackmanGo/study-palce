@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="place.dao.LocationMapper">
+
+    <resultMap id="LocationResultMap" type="place.param.Location">
+        <id property="id" column="id" />
+        <result property="lat" column="lat" />
+        <result property="lng" column="lng" />
+        <result property="description" column="description" />
+    </resultMap>
+    <insert id="insertLocation">
+        INSERT INTO locations (lat, lng, description)
+        VALUES (#{lat}, #{lng}, #{description})
+    </insert>
+
+    <select id="selectAllLocations" resultMap="LocationResultMap">
+        SELECT id, lat, lng, description
+        FROM locations
+        ORDER BY created_at DESC
+    </select>
+
+    <delete id="deleteLocationByIdAndUserId">
+        DELETE FROM locations
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

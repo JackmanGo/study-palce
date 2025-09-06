@@ -326,7 +326,7 @@
     const token = localStorage.getItem('token');
     if (!token) {
         alert("请先登录");
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     }
 
     function showNotification(message, type) {
@@ -342,7 +342,7 @@
     async function addLocation() {
         const lat = document.getElementById('lat').value;
         const lng = document.getElementById('lng').value;
-        const desc = document.getElementById('desc').value;
+        const description = document.getElementById('desc').value;
 
         if (!lat || !lng || !desc) {
             showNotification('请填写所有字段', 'error');
@@ -350,13 +350,13 @@
         }
 
         try {
-            const res = await fetch('/api/location', {
+            const res = await fetch('/place/admin/location/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token
                 },
-                body: JSON.stringify({ lat, lng, desc })
+                body: JSON.stringify({ lat, lng, description })
             });
 
             if (res.ok) {
@@ -377,7 +377,7 @@
 
     async function loadList() {
         try {
-            const res = await fetch('/api/location/list', {
+            const res = await fetch('/place/admin/location/list', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
 
@@ -386,7 +386,7 @@
                 const tbody = document.getElementById('list');
                 const emptyState = document.getElementById('emptyState');
 
-                if (data.length === 0) {
+                if (data.data.length === 0) {
                     tbody.innerHTML = "";
                     emptyState.style.display = 'block';
                     return;
@@ -395,16 +395,16 @@
                 emptyState.style.display = 'none';
                 tbody.innerHTML = "";
 
-                data.forEach(item => {
+                data.data.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                             <td>${item.lat}</td>
                             <td>${item.lng}</td>
-                            <td>${item.desc}</td>
+                            <td>${item.description}</td>
                             <td>
-                                <button class="action-btn view" onclick="viewLocation(${item.lat}, ${item.lng})">
+                                <!--button class="action-btn view" onclick="viewLocation(${item.lat}, ${item.lng})">
                                     <i class="fas fa-eye"></i> 查看
-                                </button>
+                                </button-->
                                 <button class="action-btn delete" onclick="deleteLocation(${item.id})">
                                     <i class="fas fa-trash"></i> 删除
                                 </button>
@@ -415,23 +415,18 @@
             } else if (res.status === 401) {
                 // Token无效或过期
                 localStorage.removeItem('token');
-                window.location.href = "login.html";
+                window.location.href = "index.html";
             }
         } catch (error) {
             console.error('加载位置列表失败:', error);
         }
     }
 
-    function viewLocation(lat, lng) {
-        // 在实际应用中，这里可以打开地图显示位置
-        window.open(`https://maps.google.com/?q=${lat},${lng}`, '_blank');
-    }
-
     async function deleteLocation(id) {
         if (!confirm('确定要删除这个位置吗？')) return;
 
         try {
-            const res = await fetch(`/api/location/${id}`, {
+            const res = await fetch(`/place/admin/location/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': 'Bearer ' + token }
             });
@@ -449,7 +444,7 @@
 
     function logout() {
         localStorage.removeItem('token');
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     }
 
     // 页面加载时获取位置列表
