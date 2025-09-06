@@ -4,15 +4,15 @@
 
 <view class="container" wx:if="{{ !hasLocation }}">
   <view class="userinfo">
-    <image wx:if="{{!hasUserInfo && canIUse}}" class="userinfo-avatar" mode="cover" src='/images/logo.png'></image>
-    <image wx:if="{{ hasUserInfo }}" bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-    <text wx:if="{{ hasUserInfo }}" class="userinfo-nickname">{{userInfo.nickName}}</text>
-    <text wx:if="{{ hasUserInfo }}" class="userinfo-nickname">\n</text>
+    <button class="avatar-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+    <image bindtap="bindViewTap" class="userinfo-avatar" src="{{avatarUrl}}" mode="cover"></image>
+  </button>
+    <input type="nickname" class="userinfo-nickname" placeholder="请输入昵称"/>
+    <text class="userinfo-nickname">\n</text>
   </view>
-
   <view class="usermotto" style='margin: 15px 0; '>
     <text class="user-motto">{{ motto }}</text>
-    <button class='weui-btn' type='primary' wx:if="{{ !hasUserInfo && canIUse }}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 微信登录 </button>
+    <button class='weui-btn' type='primary' wx:if="{{ !hasUserInfo && canIUse }}" bindtap="getUserProfile"> 微信授权登录 </button>
     <button class='weui-btn' type='primary' wx:if="{{ hasUserInfo }}" bindtap='getAddress' style="margin:10px auto;">获取当前位置</button>
   </view>
 

@@ -23,12 +23,23 @@ page {
 .userinfo-avatar {
   width: 128rpx;
   height: 128rpx;
-  margin: 20rpx;
   border-radius: 50%;
+}
+.avatar-button {
+  display: inline-block;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .userinfo-nickname {
   color: #aaa;
+  text-align: center;
 }
 
 .usermotto {
