@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>位置管理 | 位置记录系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #6a11cb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr auto;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .input-container input:focus {
+            border-color: #6a11cb;
+        }
+
+        .input-container input:focus + i {
+            color: #6a11cb;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+            white-space: nowrap;
+            height: 100%;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.6);
+        }
+
+        .add-btn:active {
+            transform: translateY(0);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .action-btn {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .action-btn.view {
+            color: #17a2b8;
+        }
+
+        .action-btn.view:hover {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .action-btn.delete {
+            color: #dc3545;
+        }
+
+        .action-btn.delete:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ced4da;
+        }
+
+        .empty-state p {
+            font-size: 18px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-map-marker-alt"></i> 位置记录系统</h1>
+        <div class="user-info">
+            <span>欢迎，管理员</span>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> 退出</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-plus-circle"></i> 添加新位置
+        </div>
+
+        <div class="form-group">
+            <div class="input-container">
+                <i class="fas fa-globe"></i>
+                <input type="text" id="lat" placeholder="纬度">
+            </div>
+
+            <div class="input-container">
+                <i class="fas fa-globe"></i>
+                <input type="text" id="lng" placeholder="经度">
+            </div>
+
+            <div class="input-container">
+                <i class="fas fa-comment"></i>
+                <input type="text" id="desc" placeholder="位置描述">
+            </div>
+
+            <button class="add-btn" onclick="addLocation()">
+                <i class="fas fa-save"></i> 保存位置
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-list"></i> 位置列表
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>纬度</th>
+                    <th>经度</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="list">
+                <!-- 数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <p>暂无位置数据，请添加新位置</p>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert("请先登录");
+        window.location.href = "login.html";
+    }
+
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = `notification ${type} show`;
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    async function addLocation() {
+        const lat = document.getElementById('lat').value;
+        const lng = document.getElementById('lng').value;
+        const desc = document.getElementById('desc').value;
+
+        if (!lat || !lng || !desc) {
+            showNotification('请填写所有字段', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ lat, lng, desc })
+            });
+
+            if (res.ok) {
+                showNotification('位置添加成功', 'success');
+                // 清空输入框
+                document.getElementById('lat').value = '';
+                document.getElementById('lng').value = '';
+                document.getElementById('desc').value = '';
+
+                loadList();
+            } else {
+                showNotification('添加失败，请重试', 'error');
+            }
+        } catch (error) {
+            showNotification('网络错误，请稍后重试', 'error');
+        }
+    }
+
+    async function loadList() {
+        try {
+            const res = await fetch('/api/location/list', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const tbody = document.getElementById('list');
+                const emptyState = document.getElementById('emptyState');
+
+                if (data.length === 0) {
+                    tbody.innerHTML = "";
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                tbody.innerHTML = "";
+
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>${item.lat}</td>
+                            <td>${item.lng}</td>
+                            <td>${item.desc}</td>
+                            <td>
+                                <button class="action-btn view" onclick="viewLocation(${item.lat}, ${item.lng})">
+                                    <i class="fas fa-eye"></i> 查看
+                                </button>
+                                <button class="action-btn delete" onclick="deleteLocation(${item.id})">
+                                    <i class="fas fa-trash"></i> 删除
+                                </button>
+                            </td>
+                        `;
+                    tbody.appendChild(row);
+                });
+            } else if (res.status === 401) {
+                // Token无效或过期
+                localStorage.removeItem('token');
+                window.location.href = "login.html";
+            }
+        } catch (error) {
+            console.error('加载位置列表失败:', error);
+        }
+    }
+
+    function viewLocation(lat, lng) {
+        // 在实际应用中，这里可以打开地图显示位置
+        window.open(`https://maps.google.com/?q=${lat},${lng}`, '_blank');
+    }
+
+    async function deleteLocation(id) {
+        if (!confirm('确定要删除这个位置吗？')) return;
+
+        try {
+            const res = await fetch(`/api/location/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (res.ok) {
+                showNotification('位置删除成功', 'success');
+                loadList();
+            } else {
+                showNotification('删除失败，请重试', 'error');
+            }
+        } catch (error) {
+            showNotification('网络错误，请稍后重试', 'error');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = "login.html";
+    }
+
+    // 页面加载时获取位置列表
+    document.addEventListener('DOMContentLoaded', loadList);
+</script>
+</body>
+</html>

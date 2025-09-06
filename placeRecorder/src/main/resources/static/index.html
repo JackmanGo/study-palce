@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 | 位置记录系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            width: 850px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .illustration {
+            flex: 1;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .illustration::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -50px;
+            left: -50px;
+        }
+
+        .illustration::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -50px;
+            right: -50px;
+        }
+
+        .illustration h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .illustration p {
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            z-index: 1;
+        }
+
+        .illustration-img {
+            width: 80%;
+            margin-top: 30px;
+            z-index: 1;
+        }
+
+        .login-form {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-form h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #6a11cb;
+        }
+
+        .input-group input:focus + i {
+            color: #6a11cb;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember input {
+            margin-right: 5px;
+        }
+
+        .forgot-password {
+            color: #6a11cb;
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.6);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #888;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f5f5;
+            color: #555;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .fb:hover {
+            background: #3b5998;
+            color: white;
+        }
+
+        .google:hover {
+            background: #dd4b39;
+            color: white;
+        }
+
+        .github:hover {
+            background: #333;
+            color: white;
+        }
+
+        .signup {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .signup a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup a:hover {
+            text-decoration: underline;
+        }
+
+        #msg {
+            text-align: center;
+            color: #e74c3c;
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .illustration {
+                padding: 30px;
+            }
+
+            .illustration-img {
+                width: 50%;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-form {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .illustration {
+            animation: fadeIn 1s ease-out;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="illustration">
+        <h2>欢迎使用打卡系统控制台</h2>
+        <p>安全登录以访问员工的位置记录和管理功能</p>
+        <svg class="illustration-img" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100,300 C150,200 350,200 400,300" stroke="#fff" stroke-width="10" fill="none"/>
+            <circle cx="250" cy="150" r="80" fill="#fff" opacity="0.8"/>
+            <circle cx="250" cy="350" r="40" fill="#fff" opacity="0.6"/>
+            <circle cx="150" cy="250" r="30" fill="#fff" opacity="0.4"/>
+            <circle cx="350" cy="250" r="30" fill="#fff" opacity="0.4"/>
+            <path d="M150,100 C200,50 300,50 350,100" stroke="#fff" stroke-width="8" fill="none"/>
+        </svg>
+    </div>
+
+    <div class="login-form">
+        <h2>用户登录</h2>
+
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" placeholder="用户名" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="密码">
+        </div>
+
+        <div class="options">
+            <div class="remember">
+                <input type="checkbox" id="remember">
+                <label for="remember">记住我</label>
+            </div>
+            <a href="#" class="forgot-password">忘记密码?</a>
+        </div>
+
+        <button class="login-btn" onclick="login()">登录</button>
+
+        <p id="msg"></p>
+    </div>
+</div>
+
+<script>
+    async function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const msgElement = document.getElementById('msg');
+
+        // 简单验证
+        if (!username || !password) {
+            msgElement.innerText = "请输入用户名和密码";
+            return;
+        }
+
+        // 显示加载状态
+        msgElement.innerText = "登录中...";
+        msgElement.style.color = "#3498db";
+
+        try {
+            const res = await fetch('/place/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem('token', data.token);
+
+                // 显示成功消息
+                msgElement.innerText = "登录成功! 正在跳转...";
+                msgElement.style.color = "#2ecc71";
+
+                // 延迟跳转以便用户看到成功消息
+                setTimeout(() => {
+                    window.location.href = "location.html";
+                }, 1000);
+            } else {
+                msgElement.innerText = "登录失败，请检查用户名或密码";
+                msgElement.style.color = "#e74c3c";
+            }
+        } catch (error) {
+            msgElement.innerText = "网络错误，请稍后重试";
+            msgElement.style.color = "#e74c3c";
+        }
+    }
+
+    // 添加键盘事件支持
+    document.addEventListener('DOMContentLoaded', () => {
+        const passwordInput = document.getElementById('password');
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    });
+</script>
+</body>
+</html>
