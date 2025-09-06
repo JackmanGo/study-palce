@@ -15,6 +15,3 @@ node_modules/
 
 # Visual Studio Code
 .vscode
-
-# secret-info.js
-secret-info.js
