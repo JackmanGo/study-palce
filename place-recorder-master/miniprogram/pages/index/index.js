@@ -34,7 +34,9 @@ var page = {
     console.log(e.detail )
     this.setData({
       avatarUrl,
+      hasUserInfo: true
     })
+    this.getAddress();
   },
   /**
    * 生命周期函数--监听页面加载

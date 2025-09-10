@@ -7,12 +7,12 @@
     <button class="avatar-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
     <image bindtap="bindViewTap" class="userinfo-avatar" src="{{avatarUrl}}" mode="cover"></image>
   </button>
-    <input type="nickname" class="userinfo-nickname" placeholder="请输入昵称"/>
+    <!--input type="nickname" class="userinfo-nickname" placeholder="请输入昵称"/-->
     <text class="userinfo-nickname">\n</text>
   </view>
   <view class="usermotto" style='margin: 15px 0; '>
     <text class="user-motto">{{ motto }}</text>
-    <button class='weui-btn' type='primary' wx:if="{{ !hasUserInfo && canIUse }}" bindtap="getUserProfile"> 微信授权登录 </button>
+    <button class='weui-btn' type='primary' wx:if="{{ !hasUserInfo && canIUse }}" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar"> 微信授权登录 </button>
     <button class='weui-btn' type='primary' wx:if="{{ hasUserInfo }}" bindtap='getAddress' style="margin:10px auto;">获取当前位置</button>
   </view>
 
