@@ -119,13 +119,24 @@ setCameraImage: function(imagePath) {
     const formData = e.detail.value;
     
     // 表单验证
-    if (!formData.title) {
-      wx.showToast({
-        title: '请输入打卡位置',
-        icon: 'none'
-      });
-      return;
-    }
+  // 手机号正则验证
+const phoneRegex = /^1[3-9]\d{9}$/;
+
+if (!formData.title) {
+  wx.showToast({
+    title: '请输入手机号',
+    icon: 'none'
+  });
+  return;
+}
+
+if (!phoneRegex.test(formData.title)) {
+  wx.showToast({
+    title: '请输入正确的手机号格式',
+    icon: 'none'
+  });
+  return;
+}
     
     if (!formData.description) {
       wx.showToast({

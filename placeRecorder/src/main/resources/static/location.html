@@ -83,8 +83,15 @@
             margin-bottom: 15px;
         }
 
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
         @media (max-width: 768px) {
-            .form-group {
+            .form-group, .search-form {
                 grid-template-columns: 1fr;
             }
         }
@@ -101,7 +108,7 @@
             color: #888;
         }
 
-        .input-container input {
+        .input-container input, .input-container input[type="date"] {
             width: 100%;
             padding: 15px 15px 15px 45px;
             border: 2px solid #ddd;
@@ -111,15 +118,15 @@
             outline: none;
         }
 
-        .input-container input:focus {
+        .input-container input:focus, .input-container input[type="date"]:focus {
             border-color: #6a11cb;
         }
 
-        .input-container input:focus + i {
+        .input-container input:focus + i, .input-container input[type="date"]:focus + i {
             color: #6a11cb;
         }
 
-        .add-btn {
+        .add-btn, .search-btn {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
             border: none;
@@ -134,12 +141,12 @@
             height: 100%;
         }
 
-        .add-btn:hover {
+        .add-btn:hover, .search-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(106, 17, 203, 0.6);
         }
 
-        .add-btn:active {
+        .add-btn:active, .search-btn:active {
             transform: translateY(0);
         }
 
@@ -253,6 +260,50 @@
         .card {
             animation: fadeIn 0.5s ease-out;
         }
+
+        .image-preview {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .image-preview:hover {
+            transform: scale(1.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .modal-content {
+            display: block;
+            margin: auto;
+            max-width: 80%;
+            max-height: 80%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -292,6 +343,55 @@
         </div>
     </div>
 
+    <!-- 新增的打卡记录查询部分 -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-search"></i> 打卡记录查询
+        </div>
+
+        <div class="search-form">
+            <div class="input-container">
+                <i class="fas fa-phone"></i>
+                <input type="text" id="phone" placeholder="手机号">
+            </div>
+
+            <div class="input-container">
+                <i class="fas fa-calendar"></i>
+                <input type="date" id="startDate">
+            </div>
+
+            <div class="input-container">
+                <i class="fas fa-calendar"></i>
+                <input type="date" id="endDate">
+            </div>
+
+            <button class="search-btn" onclick="searchRecords()">
+                <i class="fas fa-search"></i> 查询记录
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>手机号</th>
+                    <th>描述</th>
+                    <th>打卡图片</th>
+                    <th>打卡时间</th>
+                </tr>
+                </thead>
+                <tbody id="recordsList">
+                <!-- 打卡记录数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="recordsEmptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <p>暂无打卡记录</p>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-title">
             <i class="fas fa-list"></i> 位置列表
@@ -320,6 +420,12 @@
     </div>
 </div>
 
+<!-- 图片预览模态框 -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
 <div id="notification" class="notification"></div>
 
 <script>
@@ -344,7 +450,7 @@
         const lng = document.getElementById('lng').value;
         const description = document.getElementById('desc').value;
 
-        if (!lat || !lng || !desc) {
+        if (!lat || !lng || !description) {
             showNotification('请填写所有字段', 'error');
             return;
         }
@@ -402,9 +508,6 @@
                             <td>${item.lng}</td>
                             <td>${item.description}</td>
                             <td>
-                                <!--button class="action-btn view" onclick="viewLocation(${item.lat}, ${item.lng})">
-                                    <i class="fas fa-eye"></i> 查看
-                                </button-->
                                 <button class="action-btn delete" onclick="deleteLocation(${item.id})">
                                     <i class="fas fa-trash"></i> 删除
                                 </button>
@@ -419,6 +522,82 @@
             }
         } catch (error) {
             console.error('加载位置列表失败:', error);
+        }
+    }
+
+    async function searchRecords() {
+        const phone = document.getElementById('phone').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        // 构建查询参数
+        const params = new URLSearchParams();
+        if (phone) params.append('phone', phone);
+        if (startDate) params.append('startDate', startDate);
+        if (endDate) params.append('endDate', endDate);
+
+        try {
+            const res = await fetch(`/place/admin/records?${params.toString()}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const tbody = document.getElementById('recordsList');
+                const emptyState = document.getElementById('recordsEmptyState');
+
+                if (data.data.length === 0) {
+                    tbody.innerHTML = "";
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                tbody.innerHTML = "";
+
+                data.data.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.phone || '未知'}</td>
+                        <td>${record.description || '无描述'}</td>
+                        <td>
+                            ${record.imageUrl ?
+                        `<img src="${record.imageUrl}" alt="打卡图片" class="image-preview" onclick="openModal('${record.imageUrl}')">` :
+                        '无图片'}
+                        </td>
+                        <td>${new Date(record.checkInTime).toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else if (res.status === 401) {
+                // Token无效或过期
+                localStorage.removeItem('token');
+                window.location.href = "index.html";
+            }
+        } catch (error) {
+            console.error('查询打卡记录失败:', error);
+            showNotification('查询失败，请稍后重试', 'error');
+        }
+    }
+
+    // 打开图片模态框
+    function openModal(imageUrl) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modal.style.display = "block";
+        modalImg.src = imageUrl;
+    }
+
+    // 关闭图片模态框
+    function closeModal() {
+        document.getElementById('imageModal').style.display = "none";
+    }
+
+    // 点击模态框外部关闭
+    window.onclick = function(event) {
+        const modal = document.getElementById('imageModal');
+        if (event.target == modal) {
+            closeModal();
         }
     }
 
@@ -448,7 +627,20 @@
     }
 
     // 页面加载时获取位置列表
-    document.addEventListener('DOMContentLoaded', loadList);
+    document.addEventListener('DOMContentLoaded', function() {
+        loadList();
+
+        // 设置默认日期范围为最近7天
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 7);
+
+        document.getElementById('endDate').valueAsDate = endDate;
+        document.getElementById('startDate').valueAsDate = startDate;
+
+        // 自动加载一次打卡记录
+        searchRecords();
+    });
 </script>
 </body>
 </html>

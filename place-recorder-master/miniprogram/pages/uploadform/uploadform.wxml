@@ -9,11 +9,11 @@
   <form bindsubmit="formSubmit">
     <!-- 文本输入区域 -->
     <view class="form-group">
-      <text class="label">位置</text>
+      <text class="label">手机号</text>
       <input 
         class="input" 
         name="title" 
-        placeholder="请输入位置" 
+        placeholder="请输入手机号" 
         value="{{title}}"
         bindinput="onTitleInput"
       />
