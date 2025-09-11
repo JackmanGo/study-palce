@@ -20,6 +20,7 @@ var app = {
       key: 'openid',
       success: res => {
         this.globalData.openid = res.data;
+        this.setOpenId(this.globalData.openid)
         console.log("wx.getStorage of openid success: ", this.globalData.openid);
       },
       fail: res => {
@@ -52,26 +53,51 @@ var app = {
 
 
   },
-
+  // 设置OpenID的方法
+  setOpenId(openId) {
+    this.globalData.openId = openId;
+  },
+  
+  // 获取OpenID的方法
+  getOpenIdFromCache() {
+    return this.globalData.openId;
+  },
   getOpenid: function() {
     console.log("getOpenid in app.js called.");
-    // 调用云函数
-    wx.cloud.callFunction({
-      name: 'login',
-      data: {},
-      success: res => {
-        console.log('[云函数] [login] res: ', res);
-        console.log('[云函数] [login] res.result.openid: ', res.result.openid);
-        this.globalData.openid = res.result.openid;
-        wx.setStorage({
-          key: 'openid',
-          data: res.result.openid,
-        });
-      },
-      fail: err => {
-        console.error('[云函数] [login] 调用失败', err);
+    wx.login({
+      success: (res) => {
+        if (res.code) {
+          // 调用后端接口
+          wx.request({
+            url: 'http://127.0.0.1:8081/place/main/getOpenId',
+            method: 'POST',
+            data: {
+              jsCode: res.code
+            },
+            success: (response) => {
+              if (response.data.code === 0) {
+                const openId = response.data.data;
+                console.log('获取到的OpenID:', openId);
+                // 存储OpenID到本地
+                this.globalData.openid = openId;
+                this.setOpenId(openId)
+                wx.setStorage({
+                    key: 'openid',
+                    data: openId,
+                });
+              } else {
+                console.error('获取OpenID失败:', response.data.message);
+              }
+            },
+            fail: (error) => {
+              console.error('网络请求失败:', error);
+            }
+          });
+        } else {
+          console.error('登录失败:', res.errMsg);
+        }
       }
-    });
+        });
   },
 
   globalData: {

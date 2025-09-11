@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import place.dao.FormDataMapper;
 import place.param.FormData;
+import place.param.FormDataRes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -25,9 +26,12 @@ public class FormDataService {
     @Value("${app.file.upload-dir}")
     private String uploadDir;
 
+    public List<FormDataRes> getRecordsByConditions(String phone, Date startDate, Date endDate) {
+        return formDataMapper.selectByConditions(phone, startDate, endDate);
+    }
     // 保存表单数据
     @Transactional
-    public Long saveFormData(String title, String description, MultipartFile imageFile,
+    public Long saveFormData(String title, String description, MultipartFile imageFile, String appOpenId,
                              HttpServletRequest request) throws IOException {
 
         String imagePath = null;
@@ -43,6 +47,7 @@ public class FormDataService {
         formData.setDescription(description);
         formData.setImagePath(imagePath);
         formData.setCreateTime(new Date());
+        formData.setAppOpenId(appOpenId);
         formData.setIpAddress(getClientIp(request));
         formData.setUserAgent(request.getHeader("User-Agent"));
 

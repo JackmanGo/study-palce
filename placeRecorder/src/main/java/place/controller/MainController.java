@@ -5,12 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import place.param.CodeRequest;
 import place.service.FormDataService;
+import place.service.WeChatService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -21,10 +20,13 @@ import java.util.Map;
 public class MainController {
     private static final Logger logger= LoggerFactory.getLogger(MainController.class);
     @Autowired
+    private WeChatService weChatService;
+    @Autowired
     private FormDataService formDataService;
 
     @PostMapping("/submit")
     public ResponseEntity<?> submitForm(
+            @RequestParam(value="appOpenId", required = false) String appOpenId,
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam(value = "image", required = false) MultipartFile imageFile,
@@ -38,7 +40,7 @@ public class MainController {
             }
 
             // 保存数据
-            Long id = formDataService.saveFormData(title, description, imageFile, request);
+            Long id = formDataService.saveFormData(title, description, imageFile, appOpenId, request);
 
             // 返回成功响应
             Map<String, Object> data = new HashMap<>();
@@ -48,6 +50,22 @@ public class MainController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.badRequest()
+                    .body(createErrorResponse(-1, "提交失败: " + e.getMessage()));
+        }
+    }
+    /**
+     * 获取OpenID接口
+     * @param codeRequest 包含jsCode的请求体
+     * @return 包含OpenID的响应
+     */
+    @PostMapping("/getOpenId")
+    public ResponseEntity getOpenId(@RequestBody CodeRequest codeRequest) {
+        try {
+            String openId = weChatService.getOpenId(codeRequest.getJsCode());
+            return ResponseEntity.ok(createSuccessResponse("提交成功", openId));
+
+        } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(createErrorResponse(-1, "提交失败: " + e.getMessage()));
         }

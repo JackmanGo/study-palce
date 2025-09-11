@@ -1,3 +1,4 @@
+const app = getApp();
 // 页面逻辑
 Page({
   data: {
@@ -117,7 +118,10 @@ setCameraImage: function(imagePath) {
   formSubmit(e) {
     const that = this;
     const formData = e.detail.value;
-    
+    const appOpenId = app.getOpenIdFromCache();
+    console.log("获取存储的openId："+appOpenId)
+
+    formData.appOpenId=appOpenId;
     // 表单验证
   // 手机号正则验证
 const phoneRegex = /^1[3-9]\d{9}$/;
@@ -174,7 +178,8 @@ if (!phoneRegex.test(formData.title)) {
       name: 'image',
       formData: {
         'title': formData.title,
-        'description': formData.description
+        'description': formData.description,
+        'appOpenId':formData.appOpenId
       },
       success(res) {
         const data = JSON.parse(res.data);

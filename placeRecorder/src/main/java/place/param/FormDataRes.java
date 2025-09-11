@@ -2,30 +2,20 @@ package place.param;
 
 import java.util.Date;
 
-public class FormData {
-
+/**
+ * @author wangxi
+ * @date 2025/9/11 21:10
+ */
+public class FormDataRes {
     private Long id;
-    private String title;
+    private String title;        // 对应phone
     private String description;
     private String imagePath;
-    private Date createTime;
+    private String userUnionId;
+    private String createTime;
     private String ipAddress;
     private String userAgent;
-    private String appOpenId;
 
-    // 构造方法
-    public FormData() {
-        this.createTime = new Date();
-    }
-
-    public FormData(String title, String description, String imagePath) {
-        this.title = title;
-        this.description = description;
-        this.imagePath = imagePath;
-        this.createTime = new Date();
-    }
-
-    // Getter和Setter
     public Long getId() {
         return id;
     }
@@ -58,11 +48,19 @@ public class FormData {
         this.imagePath = imagePath;
     }
 
-    public Date getCreateTime() {
+    public String getUserUnionId() {
+        return userUnionId;
+    }
+
+    public void setUserUnionId(String userUnionId) {
+        this.userUnionId = userUnionId;
+    }
+
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -80,13 +78,5 @@ public class FormData {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
-    }
-
-    public String getAppOpenId() {
-        return appOpenId;
-    }
-
-    public void setAppOpenId(String appOpenId) {
-        this.appOpenId = appOpenId;
     }
 }

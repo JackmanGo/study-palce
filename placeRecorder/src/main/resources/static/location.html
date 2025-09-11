@@ -558,14 +558,14 @@
                 data.data.forEach(record => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${record.phone || '未知'}</td>
+                        <td>${record.title || '未知'}</td>
                         <td>${record.description || '无描述'}</td>
                         <td>
-                            ${record.imageUrl ?
-                        `<img src="${record.imageUrl}" alt="打卡图片" class="image-preview" onclick="openModal('${record.imageUrl}')">` :
+                            ${record.imagePath ?
+                        `<img src="${record.imagePath}" alt="打卡图片" class="image-preview" onclick="openModal('${record.imageUrl}')">` :
                         '无图片'}
                         </td>
-                        <td>${new Date(record.checkInTime).toLocaleString()}</td>
+                        <td>${new Date(record.createTime).toLocaleString()}</td>
                     `;
                     tbody.appendChild(row);
                 });

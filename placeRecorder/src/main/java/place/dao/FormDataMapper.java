@@ -1,11 +1,10 @@
 package place.dao;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import place.param.FormData;
+import place.param.FormDataRes;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -39,4 +38,17 @@ public interface FormDataMapper {
     // 统计总数
     @Select("SELECT COUNT(*) FROM form_data")
     int count();
+
+    @Select("SELECT id, title, description, image_path as imagePath, " +
+            "user_unionId as userUnionId, create_time as createTime " +
+            "FROM form_data " +
+            "WHERE (#{phone} IS NULL OR title LIKE CONCAT('%', #{phone}, '%')) " +
+            "AND (#{startDate} IS NULL OR create_time >= #{startDate}) " +
+            "AND (#{endDate} IS NULL OR create_time <= #{endDate}) " +
+            "ORDER BY create_time DESC")
+    List<FormDataRes> selectByConditions(
+            @Param("phone") String phone,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate
+    );
 }

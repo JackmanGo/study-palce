@@ -1,17 +1,21 @@
 package place.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import place.param.FormDataRes;
 import place.param.Location;
 import place.param.LoginRequest;
 import place.param.LoginResponse;
+import place.service.FormDataService;
 import place.service.LocationService;
 import place.util.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +29,8 @@ import java.util.Map;
 public class AdminController {
     //@Autowired
     //private UserService userService;
-
+    @Autowired
+    private FormDataService formDataService;
     @Autowired
     private LocationService locationService;
     @Autowired
@@ -97,5 +102,32 @@ public class AdminController {
             throw new RuntimeException("删除失败: " + e.getMessage());
         }
     }
+    @GetMapping("/records")
+    public ResponseEntity<Map<String, Object>> getRecordss(@RequestParam(required = false) String phone,
+                                                           @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                                           @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
 
+        try {
+            List<FormDataRes> records = formDataService.getRecordsByConditions(phone, startDate, endDate);
+
+            records.forEach(it->it.setImagePath("http://127.0.0.1:8081/place/"+it.getImagePath()));
+            return ResponseEntity.ok(createSuccessResponse("提交成功", records));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(createErrorResponse(-1, "提交失败: " + e.getMessage()));
+        }
+    }
+    private Map<String, Object> createSuccessResponse(String message, Object data) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("code", 0);
+        response.put("message", message);
+        response.put("data", data);
+        return response;
+    }
+    private Map<String, Object> createErrorResponse(int code, String message) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("code", code);
+        response.put("message", message);
+        return response;
+    }
 }

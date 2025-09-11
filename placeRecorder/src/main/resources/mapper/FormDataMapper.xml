@@ -22,14 +22,16 @@
             image_path,
             create_time,
             ip_address,
-            user_agent
+            user_agent,
+            user_unionId
         ) VALUES (
                      #{title},
                      #{description},
                      #{imagePath},
                      #{createTime},
                      #{ipAddress},
-                     #{userAgent}
+                     #{userAgent},
+                     #{appOpenId}
                  )
     </insert>
 
