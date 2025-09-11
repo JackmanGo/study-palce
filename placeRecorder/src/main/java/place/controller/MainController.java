@@ -3,17 +3,22 @@ package place.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import place.param.CodeRequest;
+import place.param.FormDataRes;
 import place.service.FormDataService;
 import place.service.WeChatService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/main")
@@ -65,6 +70,25 @@ public class MainController {
             String openId = weChatService.getOpenId(codeRequest.getJsCode());
             return ResponseEntity.ok(createSuccessResponse("提交成功", openId));
 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(createErrorResponse(-1, "提交失败: " + e.getMessage()));
+        }
+    }
+    @GetMapping("/records")
+    public ResponseEntity<Map<String, Object>> getRecordss(@RequestParam(value="appOpenId") String appOpenId) {
+
+        try {
+            List<FormDataRes> records = formDataService.getRecordsByAppOpenId(appOpenId);
+
+            List<Map> res = records.stream().map(it->{
+                Map map = new HashMap();
+                map.put("imageUrl", "http://127.0.0.1:8081/place/"+it.getImagePath());
+                map.put("address", it.getDescription());
+                map.put("formatedDate", it.getCreateTime());
+                return map;
+            }).collect(Collectors.toList());
+            return ResponseEntity.ok(createSuccessResponse("提交成功", res));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(createErrorResponse(-1, "提交失败: " + e.getMessage()));

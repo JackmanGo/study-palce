@@ -120,4 +120,8 @@ public class FormDataService {
         }
         return ip;
     }
+
+    public List<FormDataRes> getRecordsByAppOpenId(String appOpenId) {
+        return formDataMapper.selectByAppOpenId(appOpenId);
+    }
 }

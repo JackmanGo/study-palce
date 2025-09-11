@@ -51,4 +51,11 @@ public interface FormDataMapper {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate
     );
+
+    @Select("SELECT id, title, description, image_path as imagePath, " +
+            "user_unionId as userUnionId, create_time as createTime " +
+            "FROM form_data " +
+            "WHERE user_unionId = #{appOpenId} " +
+            "ORDER BY create_time DESC")
+    List<FormDataRes> selectByAppOpenId(@Param("appOpenId") String appOpenId);
 }

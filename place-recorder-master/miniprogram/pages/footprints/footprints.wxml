@@ -1,8 +1,6 @@
 <import src="/pages/common/footer.wxml" />
 
 <view wx:if="{{ !mapView }}">
-  <button class="weui-btn mini-btn" type="default" size="mini" bindtap='changeView' style="position: fixed; right: 10px; bottom: 10px; z-index: 10; margin: 0; width: auto;">在地图上查看</button>
-
   <view class="page__hd">
     <view class="page__title">历史打卡记录</view>
     <view class="page__desc">
@@ -13,25 +11,25 @@
   <view class="page__bd">
 
     <view wx:if="{{ !queryResult.length }}" style='margin: 25px 15px;'>您暂时还没有打卡记录哦，赶紧去打卡吧！</view>
-    <view class="weui-form-preview" wx:for="{{ queryResult }}" wx:key="">
-      <view class="weui-form-preview__hd">
-        <view class="weui-form-preview__item">
-          <view class="weui-form-preview__label">足迹{{ index + 1 }}</view>
-          <view class="weui-form-preview__value_in-hd">{{ item.location_details.address_component.nation }}</view>
-        </view>
+    
+    <view class="record-card" wx:for="{{ queryResult }}" wx:key="index" wx:for-item="item">
+      <view class="record-header">
+        <view class="record-title">打卡记录{{ index + 1 }}</view>
+        <view class="record-time">{{ item.formatedDate }}</view>
       </view>
-      <view class="weui-form-preview__bd">
-        <view class="weui-form-preview__item">
-          <view class="weui-form-preview__label">时间</view>
-          <view class="weui-form-preview__value">{{ item.formatedDate }}</view>
+      
+      <view class="record-content">
+        <view class="record-address">
+          <text class="address-label">地址：</text>
+          <text class="address-text">{{ item.address }}</text>
         </view>
-        <view class="weui-form-preview__item">
-          <view class="weui-form-preview__label">地址</view>
-          <view class="weui-form-preview__value">{{ item.location_details.formatted_addresses.recommend }}</view>
+        
+        <view class="record-image" wx:if="{{ item.imageUrl }}">
+          <image src="{{ item.imageUrl }}" mode="aspectFill" class="checkin-image" bindtap="previewImage" data-url="{{ item.imageUrl }}"></image>
         </view>
-        <view class="weui-form-preview__item">
-          <view class="weui-form-preview__label">详细地址</view>
-          <view class="weui-form-preview__value">{{ item.location_details.address }}</view>
+        
+        <view class="record-no-image" wx:else>
+          <text>无图片</text>
         </view>
       </view>
     </view>
@@ -42,12 +40,8 @@
 </view>
 
 <view wx:if="{{ mapView }}" style='height: 100vh; '>
-  <map
-    id="myMap"
-    latitude='{{ mean_lat }}'
-    longitude='{{ mean_lng }}'
-    markers="{{ markers }}"
-    show-location
-  ></map>
+  <view class="map-placeholder">
+    <text>地图功能需要位置信息支持</text>
+  </view>
   <button class="weui-btn mini-btn" type="default" size="mini" bindtap='changeView' style="position: fixed; right: 10px; bottom: 10px; z-index: 10; margin: 0; width: auto;">返回列表</button>
 </view>
